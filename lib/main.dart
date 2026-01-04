@@ -9,14 +9,9 @@ void main() async {
     size: Size(400, 300),
     center: true,
     backgroundColor: Colors.transparent,
-    skipTaskbar: true,
-    titleBarStyle: TitleBarStyle.hidden,
+    titleBarStyle: TitleBarStyle.normal,
+    windowButtonVisibility: true,
   );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.hide();
-  });
+
   runApp(const ServersOnlineObserverApp());
 }
-
-
-

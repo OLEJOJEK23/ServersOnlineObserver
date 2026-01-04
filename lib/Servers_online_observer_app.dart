@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:servers_online_observer/features/Tray_home_page.dart';
 
 class ServersOnlineObserverApp extends StatelessWidget {
   const ServersOnlineObserverApp({super.key});
@@ -10,7 +11,7 @@ class ServersOnlineObserverApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Text("df"),
+      home: const TrayHomePage(),
     );
   }
 }

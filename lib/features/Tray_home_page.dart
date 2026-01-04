@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tray_manager/tray_manager.dart';
@@ -20,7 +21,7 @@ class _TrayHomePageState extends State<TrayHomePage>
   void initState() {
     trayManager.addListener(this);
     windowManager.addListener(this);
-
+    _initTray();
     super.initState();
   }
 
@@ -30,6 +31,45 @@ class _TrayHomePageState extends State<TrayHomePage>
     windowManager.removeListener(this);
     _timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _initTray() async {
+    await trayManager.setToolTip('Онлайн: $_online');
+    Menu menu = Menu(
+      items: [
+        MenuItem(
+          key: "show_window",
+          label: "Показать окно",
+          onClick: (_) => windowManager.show(),
+        ),
+        MenuItem(
+          key: "update_online",
+          label: "Обновить онлайн",
+          onClick: (_) => print("!"),
+        ),
+        MenuItem(
+          key: "exit_app",
+          label: "Выход",
+          onClick: (_) => exit(0),
+        ),
+      ],
+    );
+    await trayManager.setContextMenu(menu);
+  }
+
+  @override
+  void onTrayIconMouseDown() {
+    windowManager.show();
+  }
+
+  @override
+  void onTrayIconRightMouseDown() {
+    trayManager.popUpContextMenu();
+  }
+
+  @override
+  void onWindowClose() {
+    windowManager.hide();
   }
 
   @override

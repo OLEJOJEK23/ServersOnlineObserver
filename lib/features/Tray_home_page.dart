@@ -5,7 +5,7 @@ import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
 class TrayHomePage extends StatefulWidget {
-  const TrayHomePage({super.key})
+  const TrayHomePage({super.key});
 
   @override
   State<TrayHomePage> createState() => _TrayHomePageState();
@@ -13,7 +13,6 @@ class TrayHomePage extends StatefulWidget {
 
 class _TrayHomePageState extends State<TrayHomePage>
     with TrayListener, WindowListener {
-
   Timer? _timer;
   int _online = 0;
 
@@ -35,6 +34,13 @@ class _TrayHomePageState extends State<TrayHomePage>
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Servers online observer"),
+      ),
+      body: Center(
+        child: Text("Текущий онлайн: $_online"),
+      ),
+    );
   }
 }

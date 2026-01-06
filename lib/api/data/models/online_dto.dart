@@ -18,6 +18,6 @@ class OnlineDto {
   Map<String, dynamic> toJson() => _$OnlineDtoToJson(this);
 
   Online toDomain() => Online(
-        currentOnline: online,
+        online: online,
       );
 }

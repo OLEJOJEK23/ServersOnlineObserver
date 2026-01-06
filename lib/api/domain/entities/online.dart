@@ -1,7 +1,7 @@
 class Online {
   Online({
-    required this.currentOnline,
+    required this.online,
   });
 
-  final int currentOnline;
+  final int online;
 }

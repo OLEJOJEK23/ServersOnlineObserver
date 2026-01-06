@@ -41,6 +41,7 @@ dependencies:
   retrofit: ^4.5.0
   json_annotation: ^4.9.0
   dartz: ^0.10.1
+  get_it: ^9.2.0
 
 dev_dependencies:
   flutter_test:

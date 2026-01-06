@@ -12,6 +12,8 @@ void main() async {
     titleBarStyle: TitleBarStyle.normal,
     windowButtonVisibility: true,
   );
-
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.hide();
+  });
   runApp(const ServersOnlineObserverApp());
 }

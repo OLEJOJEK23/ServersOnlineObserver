@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../domain/entities/online.dart';
+
 part 'online_dto.g.dart';
 
 @JsonSerializable()

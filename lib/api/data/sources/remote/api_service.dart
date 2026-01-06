@@ -10,5 +10,5 @@ abstract class ApiService {
   factory ApiService(Dio dio, {String baseUrl}) = _ApiService;
 
   @GET(Endpoints.getOnline)
-  Future<OnlineDto> getCurOnline();
+  Future<List<OnlineDto>> getCurrentOnline();
 }

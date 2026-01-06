@@ -35,7 +35,7 @@ class _TrayHomePageState extends State<TrayHomePage>
   }
 
   Future<void> _initTray() async {
-    await trayManager.setIcon("assets/icons/ico.ico");
+    await trayManager.setIcon("assets/icons/logo.ico");
     await trayManager.setToolTip('Онлайн: $_online');
     Menu menu = Menu(
       items: [
@@ -57,7 +57,6 @@ class _TrayHomePageState extends State<TrayHomePage>
       ],
     );
     await trayManager.setContextMenu(menu);
-    print('Tray icon configured');
   }
 
   @override

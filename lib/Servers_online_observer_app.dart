@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:servers_online_observer/features/Tray_home_page.dart';
+import 'package:servers_online_observer/features/home_page.dart';
 
 class ServersOnlineObserverApp extends StatelessWidget {
   const ServersOnlineObserverApp({super.key});

@@ -28,7 +28,7 @@ class _TrayHomePageState extends State<TrayHomePage>
   void initState() {
     trayManager.addListener(this);
     windowManager.addListener(this);
-    _fetchOnline();
+    //_fetchOnline();
     _initTray();
     windowManager.setPreventClose(true);
     super.initState();
@@ -103,14 +103,59 @@ class _TrayHomePageState extends State<TrayHomePage>
     windowManager.hide();
   }
 
+  void settings() {
+    print("settings");
+  }
+
+  void refresh() {
+    print("refresh");
+  }
+
+  void add() {
+    print("add");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Servers online observer"),
+        actions: [
+          IconButton(
+            onPressed: add,
+            icon: const Icon(Icons.add),
+          ),
+          IconButton(
+            onPressed: refresh,
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: settings,
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
-      body: Center(
-        child: Text("Текущий онлайн: ${_online!.online}"),
+      body: Row(
+        children: [
+          NavigationRail(
+            extended: true,
+            minExtendedWidth: 240,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            destinations: List.generate(
+              15,
+              (i) => NavigationRailDestination(
+                icon: const Icon(Icons.dns),
+                label: Text("Server $i"),
+              ),
+            ),
+            selectedIndex: 0,
+            onDestinationSelected: (index) {},
+          ),
+          const VerticalDivider(width: 2),
+          const Expanded(
+            child: Text("s"),
+          ),
+        ],
       ),
     );
   }

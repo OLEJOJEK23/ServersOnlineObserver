@@ -21,9 +21,12 @@ void main() async {
     titleBarStyle: TitleBarStyle.normal,
     windowButtonVisibility: true,
   );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.hide();
-  });
+  windowManager.waitUntilReadyToShow(
+    windowOptions,
+    () async {
+      await windowManager.hide();
+    },
+  );
 
   GetIt.I.registerLazySingleton(() => ApiClient.backendInstance,
       instanceName: 'backendDio');

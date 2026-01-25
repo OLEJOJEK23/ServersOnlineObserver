@@ -11,8 +11,8 @@ class ServersOnlineObserverApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Servers online observer tray app',
       theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      //darkTheme: darkTheme,
+      //themeMode: ThemeMode.system,
       home: const TrayHomePage(),
     );
   }

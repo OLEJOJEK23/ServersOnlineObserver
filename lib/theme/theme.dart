@@ -1,40 +1,41 @@
 import 'package:flutter/material.dart';
 
 final ColorScheme lightColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFF006D77),
-  // основной акцент — teal/cyan
+  seedColor: const Color(0xFFCC1A5E),
   brightness: Brightness.light,
-  primary: const Color(0xFF006D77),
+  primary: const Color(0xFFDD3153),
   onPrimary: Colors.white,
-  primaryContainer: const Color(0xFF9BE8E0),
-  onPrimaryContainer: const Color(0xFF00332E),
-  secondary: const Color(0xFF83C5BE),
-  onSecondary: Colors.black87,
+  primaryContainer: const Color(0xFFB2DFDB),
+  onPrimaryContainer: const Color(0xFF004D40),
+  secondary: const Color(0xFF26A69A),
   secondaryContainer: const Color(0xFFE0F2F1),
-  surface: const Color(0xFFFAFDFC),
-  onSurface: Colors.black87,
-  onSurfaceVariant: Colors.black54,
-  error: const Color(0xFFBA1A1A),
-  outline: const Color(0xFF6B7680),
-  shadow: Colors.black.withValues(alpha: 0.08),
+  surface: const Color(0xFFFAFEFD),
+  surfaceContainerHighest: const Color(0xFFEEF8F7),
+  onSurface: const Color(0xFF0F2A2A),
+  onSurfaceVariant: const Color(0xFF4A6362),
+  outline: const Color(0xFF7A938F),
+  outlineVariant: const Color(0xFFD3E5E3),
+  shadow: const Color(0x14000000),
+  // #000000 с opacity 0.08
+  scrim: const Color(0x52000000), // #000000 с opacity 0.32
 );
 
 final ColorScheme darkColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFF83C5BE),
+  seedColor: const Color(0xFF4DB6AC),
   brightness: Brightness.dark,
-  primary: const Color(0xFF83C5BE),
-  onPrimary: Colors.black87,
-  primaryContainer: const Color(0xFF006D77),
-  onPrimaryContainer: Colors.white,
-  secondary: const Color(0xFF006D77),
-  onSecondary: Colors.white,
-  secondaryContainer: const Color(0xFF004D52),
-  surface: const Color(0xFF0D1F1E),
-  onSurface: Colors.white70,
-  onSurfaceVariant: Colors.white60,
-  error: const Color(0xFFFFB4AB),
-  outline: const Color(0xFF8A9AA6),
-  shadow: Colors.black.withValues(alpha: 0.4),
+  primary: const Color(0xFF4DB6AC),
+  onPrimary: const Color(0xFF00201E),
+  primaryContainer: const Color(0xFF00695C),
+  secondary: const Color(0xFF80CBC4),
+  surface: const Color(0xFF0A1F1E),
+  surfaceContainerHighest: const Color(0xFF132F2D),
+  onSurface: const Color(0xEBFFFFFF),
+  // white с ~0.92
+  onSurfaceVariant: const Color(0xB3FFFFFF),
+  // white с ~0.70
+  outline: const Color(0x6680CBC4),
+  // с ~0.4
+  shadow: const Color(0x80000000),
 );
 
 final ThemeData lightTheme = ThemeData(
@@ -45,112 +46,58 @@ final ThemeData lightTheme = ThemeData(
     backgroundColor: lightColorScheme.surface,
     foregroundColor: lightColorScheme.onSurface,
     elevation: 0,
-    scrolledUnderElevation: 1,
+    scrolledUnderElevation: 0.5,
     shadowColor: lightColorScheme.shadow,
-    centerTitle: false,
     titleTextStyle: TextStyle(
-      fontSize: 22,
-      fontWeight: FontWeight.w600,
-      letterSpacing: -0.3,
+      fontSize: 23,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.4,
       color: lightColorScheme.onSurface,
     ),
   ),
   cardTheme: CardTheme(
     elevation: 1,
     shadowColor: lightColorScheme.shadow,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    color: lightColorScheme.surfaceContainerLowest,
-    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-  ),
-  listTileTheme: ListTileThemeData(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    selectedColor: lightColorScheme.primary,
-    selectedTileColor: lightColorScheme.primaryContainer.withOpacity(0.24),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    color: lightColorScheme.surfaceContainerHighest,
+    clipBehavior: Clip.antiAlias,
   ),
   navigationRailTheme: NavigationRailThemeData(
-    backgroundColor: lightColorScheme.surfaceContainer,
-    indicatorColor: lightColorScheme.primaryContainer,
-    selectedIconTheme:
-        IconThemeData(color: lightColorScheme.onPrimaryContainer),
+    backgroundColor: lightColorScheme.surface,
+    indicatorColor: Color.fromRGBO(13, 148, 136, 0.18),
+    // primary с opacity 0.18
+    indicatorShape: const StadiumBorder(),
+    selectedIconTheme: IconThemeData(color: lightColorScheme.primary, size: 28),
     unselectedIconTheme:
-        IconThemeData(color: lightColorScheme.onSurfaceVariant),
+        IconThemeData(color: lightColorScheme.onSurfaceVariant, size: 26),
     selectedLabelTextStyle: TextStyle(
-      color: lightColorScheme.onPrimaryContainer,
-      fontWeight: FontWeight.w600,
+      color: lightColorScheme.primary,
+      fontWeight: FontWeight.w700,
+      fontSize: 14,
     ),
-    unselectedLabelTextStyle:
-        TextStyle(color: lightColorScheme.onSurfaceVariant),
+    unselectedLabelTextStyle: TextStyle(
+      color: lightColorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+      fontSize: 13,
+    ),
     useIndicator: true,
     labelType: NavigationRailLabelType.all,
-    minExtendedWidth: 240,
-    minWidth: 72,
+    minExtendedWidth: 260,
+    minWidth: 80,
   ),
-  dividerTheme: DividerThemeData(
-    color: lightColorScheme.outlineVariant,
-    thickness: 1,
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: {
+      TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+      TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+      TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+    },
   ),
-  iconTheme: IconThemeData(color: lightColorScheme.onSurfaceVariant),
-  textTheme: ThemeData.light().textTheme.apply(
-        bodyColor: lightColorScheme.onSurface,
-        displayColor: lightColorScheme.onSurface,
-      ),
 );
 
+// darkTheme аналогично, но с darkColorScheme
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   colorScheme: darkColorScheme,
   scaffoldBackgroundColor: darkColorScheme.surface,
-  appBarTheme: AppBarTheme(
-    backgroundColor: darkColorScheme.surface,
-    foregroundColor: darkColorScheme.onSurface,
-    elevation: 0,
-    scrolledUnderElevation: 2,
-    shadowColor: darkColorScheme.shadow,
-    centerTitle: false,
-    titleTextStyle: TextStyle(
-      fontSize: 22,
-      fontWeight: FontWeight.w600,
-      letterSpacing: -0.3,
-      color: darkColorScheme.onSurface,
-    ),
-  ),
-  cardTheme: CardTheme(
-    elevation: 2,
-    shadowColor: darkColorScheme.shadow,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    color: darkColorScheme.surfaceContainerLowest,
-    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-  ),
-  listTileTheme: ListTileThemeData(
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    selectedColor: darkColorScheme.primary,
-    selectedTileColor: darkColorScheme.primaryContainer.withOpacity(0.20),
-  ),
-  navigationRailTheme: NavigationRailThemeData(
-    backgroundColor: darkColorScheme.surfaceContainer,
-    indicatorColor: darkColorScheme.primaryContainer.withOpacity(0.3),
-    selectedIconTheme: IconThemeData(color: darkColorScheme.onPrimaryContainer),
-    unselectedIconTheme: IconThemeData(color: darkColorScheme.onSurfaceVariant),
-    selectedLabelTextStyle: TextStyle(
-      color: darkColorScheme.onPrimaryContainer,
-      fontWeight: FontWeight.w600,
-    ),
-    unselectedLabelTextStyle:
-        TextStyle(color: darkColorScheme.onSurfaceVariant),
-    useIndicator: true,
-    labelType: NavigationRailLabelType.all,
-    minExtendedWidth: 240,
-    minWidth: 72,
-  ),
-  dividerTheme: DividerThemeData(
-    color: darkColorScheme.outlineVariant,
-    thickness: 1,
-  ),
-  iconTheme: IconThemeData(color: darkColorScheme.onSurfaceVariant),
-  textTheme: ThemeData.dark().textTheme.apply(
-        bodyColor: darkColorScheme.onSurface,
-        displayColor: darkColorScheme.onSurface,
-      ),
+  // ... остальные свойства копируются по аналогии с lightTheme
 );

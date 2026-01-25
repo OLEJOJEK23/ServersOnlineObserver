@@ -7,9 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:servers_online_observer/Servers_online_observer_app.dart';
-
-import 'package:servers_online_observer/main.dart';
+import 'package:servers_online_observer/servers_online_observer_app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:servers_online_observer/Servers_online_observer_app.dart';
 import 'package:servers_online_observer/api/core/network/api_client.dart';
 import 'package:servers_online_observer/api/data/repositories/online_repository_impl.dart';
 import 'package:servers_online_observer/api/domain/repositories/online_repository.dart';
 import 'package:servers_online_observer/api/domain/usecases/get_online.dart';
+import 'package:servers_online_observer/servers_online_observer_app.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'api/core/network/network_config.dart';
@@ -15,7 +15,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(400, 300),
+    size: Size(800, 500),
+    minimumSize: Size(800, 500),
     center: true,
     backgroundColor: Colors.transparent,
     titleBarStyle: TitleBarStyle.normal,
@@ -24,7 +25,7 @@ void main() async {
   windowManager.waitUntilReadyToShow(
     windowOptions,
     () async {
-      await windowManager.hide();
+      //await windowManager.hide();
     },
   );
 

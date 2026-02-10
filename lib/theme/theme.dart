@@ -1,41 +1,85 @@
 import 'package:flutter/material.dart';
 
-final ColorScheme lightColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFFCC1A5E),
+const ColorScheme lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: const Color(0xFFDD3153),
+
+  // Основной цвет и его вариации
+  primary: Color(0xFF256EFF),
   onPrimary: Colors.white,
-  primaryContainer: const Color(0xFFB2DFDB),
-  onPrimaryContainer: const Color(0xFF004D40),
-  secondary: const Color(0xFF26A69A),
-  secondaryContainer: const Color(0xFFE0F2F1),
-  surface: const Color(0xFFFAFEFD),
-  surfaceContainerHighest: const Color(0xFFEEF8F7),
-  onSurface: const Color(0xFF0F2A2A),
-  onSurfaceVariant: const Color(0xFF4A6362),
-  outline: const Color(0xFF7A938F),
-  outlineVariant: const Color(0xFFD3E5E3),
-  shadow: const Color(0x14000000),
-  // #000000 с opacity 0.08
-  scrim: const Color(0x52000000), // #000000 с opacity 0.32
+  primaryContainer: Color(0xFFDDE8FF),
+  // очень светлый оттенок основного
+  onPrimaryContainer: Color(0xFF001A5C),
+
+  // Акцентный
+  secondary: Color(0xFF3DDC97),
+  onSecondary: Color(0xFF001F12),
+  secondaryContainer: Color(0xFFDFF7EE),
+  onSecondaryContainer: Color(0xFF002112),
+
+  // Дополнительный
+  tertiary: Color(0xFF46237A),
+  onTertiary: Colors.white,
+  tertiaryContainer: Color(0xFFE8DEFF),
+  onTertiaryContainer: Color(0xFF1C0038),
+
+  // Нейтральные поверхности — только на основе белого + очень лёгкий оттенок основного
+  surface: Color(0xFFFAFCFF),
+  onSurface: Color(0xFF0F1A3A),
+  onSurfaceVariant: Color(0xFF3A4666),
+
+  // Контуры и тени — на основе основного/дополнительного с прозрачностью
+  outline: Color(0xFF6A88CC),
+  // приглушённый основной
+  outlineVariant: Color(0xFFB8C8FF),
+  shadow: Color(0x1A256EFF),
+  // основной с opacity ~10%
+  scrim: Color(0x4D000000),
+
+  // Ошибка — используем приглушённый красный (но близкий по насыщенности к палитре)
+  error: Color(0xFFFF4D4F),
+  onError: Colors.white,
+  errorContainer: Color(0xFFFFE0E0),
+  onErrorContainer: Color(0xFF5C0000),
 );
 
-final ColorScheme darkColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFF4DB6AC),
+const ColorScheme darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: const Color(0xFF4DB6AC),
-  onPrimary: const Color(0xFF00201E),
-  primaryContainer: const Color(0xFF00695C),
-  secondary: const Color(0xFF80CBC4),
-  surface: const Color(0xFF0A1F1E),
-  surfaceContainerHighest: const Color(0xFF132F2D),
-  onSurface: const Color(0xEBFFFFFF),
-  // white с ~0.92
-  onSurfaceVariant: const Color(0xB3FFFFFF),
-  // white с ~0.70
-  outline: const Color(0x6680CBC4),
-  // с ~0.4
-  shadow: const Color(0x80000000),
+
+  // Основной — светлее для читаемости
+  primary: Color(0xFF80AFFF),
+  // осветлённый #256EFF
+  onPrimary: Color(0xFF001A4D),
+  primaryContainer: Color(0xFF004CFF),
+  onPrimaryContainer: Color(0xFFDDE8FF),
+
+  // Акцентный — чуть светлее
+  secondary: Color(0xFF7AEFC0),
+  onSecondary: Color(0xFF002112),
+  secondaryContainer: Color(0xFF004D3A),
+  onSecondaryContainer: Color(0xFFDFF7EE),
+
+  // Дополнительный — светлее
+  tertiary: Color(0xFFD0B3FF),
+  onTertiary: Color(0xFF2E004E),
+  tertiaryContainer: Color(0xFF3A1A6A),
+  onTertiaryContainer: Color(0xFFE8DEFF),
+
+  // Поверхности — тёмные с лёгким намёком на основной
+  surface: Color(0xFF0A1329),
+  onSurface: Color(0xFFDDE8FF),
+  onSurfaceVariant: Color(0xFFB8C8FF),
+
+  // Контуры
+  outline: Color(0xFF6A88CC),
+  outlineVariant: Color(0xFF3A4A7A),
+  shadow: Color(0x80000000),
+  scrim: Color(0x99000000),
+
+  // Ошибка
+  error: Color(0xFFFF9999),
+  onError: Color(0xFF330000),
+  errorContainer: Color(0xFF660000),
+  onErrorContainer: Color(0xFFFFE0E0),
 );
 
 final ThemeData lightTheme = ThemeData(
@@ -46,7 +90,7 @@ final ThemeData lightTheme = ThemeData(
     backgroundColor: lightColorScheme.surface,
     foregroundColor: lightColorScheme.onSurface,
     elevation: 0,
-    scrolledUnderElevation: 0.5,
+    scrolledUnderElevation: 0.8,
     shadowColor: lightColorScheme.shadow,
     titleTextStyle: TextStyle(
       fontSize: 23,
@@ -63,11 +107,11 @@ final ThemeData lightTheme = ThemeData(
     clipBehavior: Clip.antiAlias,
   ),
   navigationRailTheme: NavigationRailThemeData(
-    backgroundColor: lightColorScheme.surface,
-    indicatorColor: Color.fromRGBO(13, 148, 136, 0.18),
-    // primary с opacity 0.18
+    backgroundColor: lightColorScheme.surfaceContainerLowest,
+    indicatorColor: lightColorScheme.primary.withAlpha(50),
     indicatorShape: const StadiumBorder(),
-    selectedIconTheme: IconThemeData(color: lightColorScheme.primary, size: 28),
+    selectedIconTheme:
+        IconThemeData(color: lightColorScheme.onPrimary, size: 28),
     unselectedIconTheme:
         IconThemeData(color: lightColorScheme.onSurfaceVariant, size: 26),
     selectedLabelTextStyle: TextStyle(
@@ -85,19 +129,53 @@ final ThemeData lightTheme = ThemeData(
     minExtendedWidth: 260,
     minWidth: 80,
   ),
-  pageTransitionsTheme: const PageTransitionsTheme(
-    builders: {
-      TargetPlatform.windows: ZoomPageTransitionsBuilder(),
-      TargetPlatform.linux: ZoomPageTransitionsBuilder(),
-      TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
-    },
-  ),
 );
 
-// darkTheme аналогично, но с darkColorScheme
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   colorScheme: darkColorScheme,
   scaffoldBackgroundColor: darkColorScheme.surface,
-  // ... остальные свойства копируются по аналогии с lightTheme
+  appBarTheme: AppBarTheme(
+    backgroundColor: darkColorScheme.surface,
+    foregroundColor: darkColorScheme.onSurface,
+    elevation: 0,
+    scrolledUnderElevation: 1.5,
+    shadowColor: darkColorScheme.shadow,
+    titleTextStyle: TextStyle(
+      fontSize: 23,
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.4,
+      color: darkColorScheme.onSurface,
+    ),
+  ),
+  cardTheme: CardTheme(
+    elevation: 2,
+    shadowColor: darkColorScheme.shadow,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    color: darkColorScheme.surfaceContainerHighest,
+    clipBehavior: Clip.antiAlias,
+  ),
+  navigationRailTheme: NavigationRailThemeData(
+    backgroundColor: darkColorScheme.surfaceContainerLowest,
+    indicatorColor: darkColorScheme.primary.withAlpha(70),
+    indicatorShape: const StadiumBorder(),
+    selectedIconTheme:
+        IconThemeData(color: darkColorScheme.onPrimary, size: 28),
+    unselectedIconTheme:
+        IconThemeData(color: darkColorScheme.onSurfaceVariant, size: 26),
+    selectedLabelTextStyle: TextStyle(
+      color: darkColorScheme.primary,
+      fontWeight: FontWeight.w700,
+      fontSize: 14,
+    ),
+    unselectedLabelTextStyle: TextStyle(
+      color: darkColorScheme.onSurfaceVariant,
+      fontWeight: FontWeight.w500,
+      fontSize: 13,
+    ),
+    useIndicator: true,
+    labelType: NavigationRailLabelType.all,
+    minExtendedWidth: 260,
+    minWidth: 80,
+  ),
 );

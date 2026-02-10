@@ -165,12 +165,7 @@ class _TrayHomePageState extends State<TrayHomePage>
             tooltip: "Сменить тему",
             onPressed: () => print("toggle theme"),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings_rounded),
-            tooltip: "Настройки",
-            onPressed: () => print("settings"),
-          ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),

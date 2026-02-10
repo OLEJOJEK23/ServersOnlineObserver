@@ -19,27 +19,62 @@ class NavigationRailProjects extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: NavigationRail(
-        extended: true,
-        minWidth: 140.0,
-        minExtendedWidth: 140.0,
-        // фиксированная ширина — нет подёргивания
-        backgroundColor: colorScheme.surfaceContainerLowest,
-        selectedIndex: selectedIndex,
-        onDestinationSelected: onDestinationSelected,
-        destinations: projects.asMap().entries.map((e) {
-          final name = e.value;
-          return NavigationRailDestination(
-            icon: const Icon(Icons.dns_rounded, size: 28),
-            selectedIcon: const Icon(Icons.dns_outlined, size: 28),
-            label: Text(
-              name,
-              style: const TextStyle(fontSize: 15),
-              overflow: TextOverflow.ellipsis, // на всякий случай
-              maxLines: 1,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: IntrinsicHeight(
+                child: NavigationRail(
+                  extended: true,
+                  minWidth: 140.0,
+                  minExtendedWidth: 140.0,
+                  backgroundColor: colorScheme.surfaceContainerLowest,
+                  selectedIndex: selectedIndex,
+                  onDestinationSelected: onDestinationSelected,
+                  destinations: projects.asMap().entries.map((e) {
+                    final name = e.value;
+                    return NavigationRailDestination(
+                      icon: const Icon(Icons.dns_rounded, size: 28),
+                      selectedIcon: const Icon(Icons.dns_outlined, size: 28),
+                      label: Text(
+                        name,
+                        style: const TextStyle(fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
-          );
-        }).toList(),
+          ),
+          Column(
+            children: [
+              const SizedBox(
+                height: 4,
+                width: 140,
+                child: Divider(),
+              ),
+              Material(
+                elevation: 4,
+                color: colorScheme.surface,
+                child: SafeArea(
+                  top: false,
+                  bottom: true,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: IconButton(
+                      icon: const Icon(Icons.settings_rounded),
+                      tooltip: "Настройки",
+                      onPressed: () => print("settings"),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

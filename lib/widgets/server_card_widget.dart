@@ -39,8 +39,8 @@ class ServerCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () => print("Tap: ${server["name"]}"),
-          hoverColor: Color.fromRGBO(13, 148, 136, 0.08),
-          splashColor: Color.fromRGBO(13, 148, 136, 0.16),
+          hoverColor: const Color.fromRGBO(13, 148, 136, 0.08),
+          splashColor: const Color.fromRGBO(13, 148, 136, 0.16),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -111,6 +111,21 @@ class ServerCard extends StatelessWidget {
                         color: colorScheme.onSurfaceVariant.withAlpha(191),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  children: [
+                    IconButton(
+                      onPressed: () => print("copy"),
+                      icon: const Icon(Icons.copy),
+                    ),
+                    IconButton(
+                      onPressed: () => print("connect"),
+                      icon: const Icon(Icons.play_arrow),
+                    )
                   ],
                 ),
               ],

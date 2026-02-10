@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:servers_online_observer/api/domain/entities/online.dart';
 import 'package:servers_online_observer/widgets/navigation_rail_widget.dart';
@@ -10,6 +11,7 @@ import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../api/domain/usecases/get_online.dart';
+import '../blocks/theme/theme_cubit.dart';
 
 class TrayHomePage extends StatefulWidget {
   const TrayHomePage({super.key});
@@ -160,10 +162,28 @@ class _TrayHomePageState extends State<TrayHomePage>
             tooltip: "Обновить данные",
             onPressed: () => print("refresh"),
           ),
-          IconButton(
-            icon: Icon(Icons.dark_mode_rounded),
-            tooltip: "Сменить тему",
-            onPressed: () => print("toggle theme"),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return ScaleTransition(scale: animation, child: child);
+              // можно использовать FadeTransition, RotationTransition и т.д.
+            },
+            child: IconButton(
+              key: ValueKey<bool>(context.watch<ThemeCubit>().state.isDark),
+              // ключ меняется при смене состояния → запускается анимация
+              icon: Icon(
+                context.watch<ThemeCubit>().state.isDark
+                    ? Icons.light_mode_rounded
+                    : Icons.dark_mode_rounded,
+                size: 24,
+              ),
+              tooltip: context.watch<ThemeCubit>().state.isDark
+                  ? 'Переключить на светлую тему'
+                  : 'Переключить на тёмную тему',
+              onPressed: () {
+                context.read<ThemeCubit>().toggleTheme();
+              },
+            ),
           ),
           const SizedBox(width: 10),
         ],

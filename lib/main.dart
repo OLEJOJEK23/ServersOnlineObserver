@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:servers_online_observer/api/core/network/api_client.dart';
 import 'package:servers_online_observer/api/data/repositories/online_repository_impl.dart';
 import 'package:servers_online_observer/api/domain/repositories/online_repository.dart';
 import 'package:servers_online_observer/api/domain/usecases/get_online.dart';
+import 'package:servers_online_observer/repositories/settings_repository/settings_repository.dart';
 import 'package:servers_online_observer/servers_online_observer_app.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'api/core/network/network_config.dart';
 import 'api/data/sources/local/cache_manager.dart';
 import 'api/data/sources/remote/api_service.dart';
+import 'blocks/theme/theme_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,5 +48,13 @@ void main() async {
     ),
   );
   GetIt.I.registerLazySingleton(() => GetOnline(GetIt.I<OnlineRepository>()));
-  runApp(const ServersOnlineObserverApp());
+  runApp(RepositoryProvider<SettingsRepositoryInterface>(
+    create: (context) => SettingsRepository(),
+    child: BlocProvider<ThemeCubit>(
+      create: (context) => ThemeCubit(
+        settingsRepository: context.read<SettingsRepositoryInterface>(),
+      ),
+      child: const ServersOnlineObserverApp(),
+    ),
+  ));
 }

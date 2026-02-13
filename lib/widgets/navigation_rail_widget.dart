@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:servers_online_observer/widgets/settings_bottom_sheet.dart';
 
-class NavigationRailProjects extends StatelessWidget {
+class NavigationRailProjects extends StatefulWidget {
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final List<String> projects;
@@ -11,6 +12,29 @@ class NavigationRailProjects extends StatelessWidget {
     required this.onDestinationSelected,
     required this.projects,
   });
+
+  @override
+  State<NavigationRailProjects> createState() => _NavigationRailProjectsState();
+}
+
+class _NavigationRailProjectsState extends State<NavigationRailProjects>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800), // время одного оборота
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +53,9 @@ class NavigationRailProjects extends StatelessWidget {
                   minWidth: 140.0,
                   minExtendedWidth: 140.0,
                   backgroundColor: colorScheme.surfaceContainerLowest,
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: onDestinationSelected,
-                  destinations: projects.asMap().entries.map((e) {
+                  selectedIndex: widget.selectedIndex,
+                  onDestinationSelected: widget.onDestinationSelected,
+                  destinations: widget.projects.asMap().entries.map((e) {
                     final name = e.value;
                     return NavigationRailDestination(
                       icon: const Icon(Icons.dns_rounded, size: 28),
@@ -65,9 +89,30 @@ class NavigationRailProjects extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: IconButton(
-                      icon: const Icon(Icons.settings_rounded),
+                      icon: AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Transform.rotate(
+                            angle: _animationController.value,
+                            child: child,
+                          );
+                        },
+                        child: const Icon(Icons.settings_rounded),
+                      ),
                       tooltip: "Настройки",
-                      onPressed: () => print("settings"),
+                      onPressed: () {
+                        _animationController.forward(from: 0.0).then(
+                          (_) {
+                            _animationController.reset();
+                          },
+                        );
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const SettingsBottomSheet(),
+                        );
+                      },
                     ),
                   ),
                 ),

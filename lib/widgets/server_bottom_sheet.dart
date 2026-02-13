@@ -134,7 +134,6 @@ class _NewServerBottomSheetState extends State<NewServerBottomSheet> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Введите ссылку';
                         }
-                        // Простая проверка на URL (можно усилить)
                         if (!value.startsWith('http://') &&
                             !value.startsWith('https://')) {
                           return 'Ссылка должна начинаться с http:// или https://';

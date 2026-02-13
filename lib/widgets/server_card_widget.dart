@@ -24,7 +24,6 @@ class ServerCard extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 400),
-      // можно параметризовать index позже
       curve: Curves.easeOutCubic,
       builder: (ctx, value, child) {
         return Opacity(

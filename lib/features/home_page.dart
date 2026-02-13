@@ -52,11 +52,13 @@ class _TrayHomePageState extends State<TrayHomePage>
 
   @override
   void initState() {
-    trayManager.addListener(this);
-    windowManager.addListener(this);
+    if (Platform.isWindows) {
+      trayManager.addListener(this);
+      windowManager.addListener(this);
+      _initTray();
+      //windowManager.setPreventClose(true);
+    }
     //_fetchOnline();
-    _initTray();
-    //windowManager.setPreventClose(true);
     super.initState();
   }
 
@@ -162,12 +164,7 @@ class _TrayHomePageState extends State<TrayHomePage>
                 isScrollControlled: true, // важно для клавиатуры
                 backgroundColor: Colors.transparent,
                 builder: (context) => NewServerBottomSheet(
-                  onAdd: (name, url) {
-                    // здесь обрабатываешь добавление
-                    print('Добавлен сервер: $name - $url');
-                    // например: добавить в список проектов
-                    // или вызвать какой-то Bloc событие
-                  },
+                  onAdd: (name, url) {},
                 ),
               );
             },
@@ -181,11 +178,9 @@ class _TrayHomePageState extends State<TrayHomePage>
             duration: const Duration(milliseconds: 400),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return ScaleTransition(scale: animation, child: child);
-              // можно использовать FadeTransition, RotationTransition и т.д.
             },
             child: IconButton(
               key: ValueKey<bool>(context.watch<ThemeCubit>().state.isDark),
-              // ключ меняется при смене состояния → запускается анимация
               icon: Icon(
                 context.watch<ThemeCubit>().state.isDark
                     ? Icons.light_mode_rounded

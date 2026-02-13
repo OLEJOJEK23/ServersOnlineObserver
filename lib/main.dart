@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -16,21 +19,23 @@ import 'blocks/theme/theme_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(800, 500),
-    minimumSize: Size(800, 500),
-    center: true,
-    backgroundColor: Colors.transparent,
-    titleBarStyle: TitleBarStyle.normal,
-    windowButtonVisibility: true,
-  );
-  windowManager.waitUntilReadyToShow(
-    windowOptions,
-    () async {
-      //await windowManager.hide();
-    },
-  );
+  if (!kIsWeb && (Platform.isWindows)) {
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(800, 500),
+      minimumSize: Size(800, 500),
+      center: true,
+      backgroundColor: Colors.transparent,
+      titleBarStyle: TitleBarStyle.normal,
+      windowButtonVisibility: true,
+    );
+    windowManager.waitUntilReadyToShow(
+      windowOptions,
+      () async {
+        //await windowManager.hide();
+      },
+    );
+  }
 
   GetIt.I.registerLazySingleton(() => ApiClient.backendInstance,
       instanceName: 'backendDio');
@@ -48,13 +53,15 @@ void main() async {
     ),
   );
   GetIt.I.registerLazySingleton(() => GetOnline(GetIt.I<OnlineRepository>()));
-  runApp(RepositoryProvider<SettingsRepositoryInterface>(
-    create: (context) => SettingsRepository(),
-    child: BlocProvider<ThemeCubit>(
-      create: (context) => ThemeCubit(
-        settingsRepository: context.read<SettingsRepositoryInterface>(),
+  runApp(
+    RepositoryProvider<SettingsRepositoryInterface>(
+      create: (context) => SettingsRepository(),
+      child: BlocProvider<ThemeCubit>(
+        create: (context) => ThemeCubit(
+          settingsRepository: context.read<SettingsRepositoryInterface>(),
+        ),
+        child: const ServersOnlineObserverApp(),
       ),
-      child: const ServersOnlineObserverApp(),
     ),
-  ));
+  );
 }

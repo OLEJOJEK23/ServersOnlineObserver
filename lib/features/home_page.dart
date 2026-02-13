@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:servers_online_observer/api/domain/entities/online.dart';
 import 'package:servers_online_observer/widgets/navigation_rail_widget.dart';
+import 'package:servers_online_observer/widgets/server_bottom_sheet.dart';
 import 'package:servers_online_observer/widgets/server_card_widget.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -155,7 +156,21 @@ class _TrayHomePageState extends State<TrayHomePage>
           IconButton(
             icon: const Icon(Icons.add_rounded),
             tooltip: "Добавить проект",
-            onPressed: () => print("add project"),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true, // важно для клавиатуры
+                backgroundColor: Colors.transparent,
+                builder: (context) => NewServerBottomSheet(
+                  onAdd: (name, url) {
+                    // здесь обрабатываешь добавление
+                    print('Добавлен сервер: $name - $url');
+                    // например: добавить в список проектов
+                    // или вызвать какой-то Bloc событие
+                  },
+                ),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
@@ -187,11 +202,10 @@ class _TrayHomePageState extends State<TrayHomePage>
           ),
           const SizedBox(width: 10),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4.0),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4.0),
           child: Divider(
             thickness: 2,
-            color: theme.primaryColor,
           ),
         ),
       ),

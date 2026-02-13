@@ -36,6 +36,7 @@ class ServerCard extends StatelessWidget {
         );
       },
       child: Card(
+        elevation: 5,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () => print("Tap: ${server["name"]}"),

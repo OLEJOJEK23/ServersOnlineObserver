@@ -4,14 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:servers_online_observer/api/domain/entities/online.dart';
+import 'package:servers_online_observer/api/domain/usecases/get_servers.dart';
 import 'package:servers_online_observer/widgets/navigation_rail_widget.dart';
 import 'package:servers_online_observer/widgets/server_bottom_sheet.dart';
 import 'package:servers_online_observer/widgets/server_card_widget.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../api/domain/usecases/get_online.dart';
+import '../api/domain/entities/server.dart';
 import '../blocks/theme/theme_cubit.dart';
 
 class TrayHomePage extends StatefulWidget {
@@ -23,22 +23,12 @@ class TrayHomePage extends StatefulWidget {
 
 class _TrayHomePageState extends State<TrayHomePage>
     with TrayListener, WindowListener {
-  final GetOnline _getOnline = GetIt.I<GetOnline>();
+  final GetServers _getServers = GetIt.I<GetServers>();
   Timer? _timer;
-  Online? _online;
-  bool _isOnlineLoading = false;
-  String? _onlineError;
+  List<Server> _servers = [];
+  bool _isLoading = false;
+  String? _error;
   int _selectedIndex = 0;
-
-  final List<Map<String, String>> _currentServers = [
-    {"name": "⚡ #1 ДЕТИ МИРАЖА", "map": "de_mirage", "online": "12/32"},
-    {"name": "⚡ #2 ДЕТИ АНТИЧНОСТИ", "map": "de_anubis", "online": "0/24"},
-    {"name": "ONLY MIRAGE | NOCHEATS", "map": "de_mirage", "online": "45/64"},
-    {"name": "CLASSIC | 128 TICK", "map": "de_dust2", "online": "8/32"},
-    {"name": "AIM MAPS | FFA", "map": "aim_map", "online": "3/20"},
-    {"name": "RETURNS #3", "map": "de_inferno", "online": "19/40"},
-    {"name": "MIRAGE ONLY 5v5", "map": "de_mirage", "online": "7/10"},
-  ];
 
   final List<String> _projects = [
     "METACS.RU",
@@ -58,7 +48,10 @@ class _TrayHomePageState extends State<TrayHomePage>
       _initTray();
       //windowManager.setPreventClose(true);
     }
-    //_fetchOnline();
+    _fetchServers();
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _fetchServers();
+    });
     super.initState();
   }
 
@@ -72,7 +65,7 @@ class _TrayHomePageState extends State<TrayHomePage>
 
   Future<void> _initTray() async {
     await trayManager.setIcon("assets/icons/logo.ico");
-    await trayManager.setToolTip('Онлайн: ${_online!.online}');
+    await trayManager.setToolTip('Servers Online Observer');
     Menu menu = Menu(
       items: [
         MenuItem(
@@ -83,7 +76,7 @@ class _TrayHomePageState extends State<TrayHomePage>
         MenuItem(
           key: "update_online",
           label: "Обновить онлайн",
-          onClick: (_) => print("!"),
+          onClick: (_) => _fetchServers(),
         ),
         MenuItem(
           key: "exit_app",
@@ -95,24 +88,24 @@ class _TrayHomePageState extends State<TrayHomePage>
     await trayManager.setContextMenu(menu);
   }
 
-  Future<void> _fetchOnline() async {
+  Future<void> _fetchServers() async {
     setState(() {
-      _isOnlineLoading = true;
-      _onlineError = null;
+      _isLoading = true;
+      _error = null;
     });
-    final result = await _getOnline();
+    final result = await _getServers();
     result.fold(
       (failure) => setState(() {
-        _onlineError = failure.message;
-        _isOnlineLoading = true;
+        _error = failure.message;
+        _isLoading = false;
       }),
-      (online) => setState(() {
-        _online = online[0];
-        _isOnlineLoading = false;
+      (servers) => setState(() {
+        _servers = servers;
+        _isLoading = false;
       }),
     );
-    if (_onlineError != null) {
-      print(_onlineError);
+    if (_error != null) {
+      print(_error);
     }
   }
 
@@ -136,7 +129,7 @@ class _TrayHomePageState extends State<TrayHomePage>
   }
 
   void refresh() {
-    print("refresh");
+    _fetchServers();
   }
 
   void add() {
@@ -172,7 +165,7 @@ class _TrayHomePageState extends State<TrayHomePage>
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
             tooltip: "Обновить данные",
-            onPressed: () => print("refresh"),
+            onPressed: refresh,
           ),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 400),
@@ -218,18 +211,26 @@ class _TrayHomePageState extends State<TrayHomePage>
             color: colorScheme.outlineVariant,
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              itemCount: _currentServers.length,
-              itemBuilder: (context, index) {
-                final server = _currentServers[index];
-                return ServerCard(
-                  server: server,
-                  theme: theme,
-                  colorScheme: colorScheme,
-                );
-              },
-            ),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _error != null
+                    ? Center(child: Text('Error: $_error'))
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: _servers.length,
+                        itemBuilder: (context, index) {
+                          final server = _servers[index];
+                          return ServerCard(
+                            server: {
+                              "name": server.serverName,
+                              "map": server.serverCurrentMap,
+                              "online": server.serverCurrentOnline,
+                            },
+                            theme: theme,
+                            colorScheme: colorScheme,
+                          );
+                        },
+                      ),
           ),
         ],
       ),

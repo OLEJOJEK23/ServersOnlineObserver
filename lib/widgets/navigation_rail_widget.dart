@@ -74,10 +74,10 @@ class _NavigationRailProjectsState extends State<NavigationRailProjects>
           ),
           Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 4,
                 width: 140,
-                child: Divider(),
+                child: Divider(thickness: 2, color: colorScheme.outlineVariant),
               ),
               Material(
                 elevation: 4,

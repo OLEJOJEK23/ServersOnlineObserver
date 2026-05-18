@@ -22,19 +22,19 @@ class _ApiService implements ApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<OnlineDto>> getCurrentOnline() async {
+  Future<ServersResponse> getServers() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<OnlineDto>>(Options(
+    final _options = _setStreamType<ServersResponse>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/online',
+          '/servers',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -43,12 +43,10 @@ class _ApiService implements ApiService {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<OnlineDto> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ServersResponse _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => OnlineDto.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = ServersResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

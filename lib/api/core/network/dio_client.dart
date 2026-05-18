@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import 'network_config.dart';
 
-class ApiClient {
+class DioClient {
   static Dio? _backendDio;
 
   static Dio get backendInstance {

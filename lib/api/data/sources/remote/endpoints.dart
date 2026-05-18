@@ -1,3 +1,3 @@
 class Endpoints {
-  static const String getOnline = "/online";
+  static const String getServers = "/servers";
 }

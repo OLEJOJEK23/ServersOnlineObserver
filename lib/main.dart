@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:servers_online_observer/api/core/network/api_client.dart';
-import 'package:servers_online_observer/api/data/repositories/online_repository_impl.dart';
-import 'package:servers_online_observer/api/domain/repositories/online_repository.dart';
-import 'package:servers_online_observer/api/domain/usecases/get_online.dart';
+import 'package:servers_online_observer/api/core/network/dio_client.dart';
+import 'package:servers_online_observer/api/data/repositories/server_repository_impl.dart';
+import 'package:servers_online_observer/api/domain/repositories/server_repository.dart';
+import 'package:servers_online_observer/api/domain/usecases/get_servers.dart';
 import 'package:servers_online_observer/repositories/settings_repository/settings_repository.dart';
 import 'package:servers_online_observer/servers_online_observer_app.dart';
 import 'package:window_manager/window_manager.dart';
@@ -37,22 +37,26 @@ void main() async {
     );
   }
 
-  GetIt.I.registerLazySingleton(() => ApiClient.backendInstance,
-      instanceName: 'backendDio');
+  GetIt.I.registerLazySingleton(
+    () => DioClient.backendInstance,
+    instanceName: 'backendDio',
+  );
 
   GetIt.I.registerLazySingleton<ApiService>(
-    () => ApiService(GetIt.I(instanceName: 'backendDio'),
-        baseUrl: NetworkConfig.baseUrl),
+    () => ApiService(
+      GetIt.I(instanceName: 'backendDio'),
+      baseUrl: NetworkConfig.baseUrl,
+    ),
     instanceName: 'backendDio',
   );
   GetIt.I.registerLazySingleton<CacheManager>(() => CacheManagerImpl());
-  GetIt.I.registerLazySingleton<OnlineRepository>(
-    () => OnlineRepositoryImpl(
+  GetIt.I.registerLazySingleton<ServerRepository>(
+    () => ServerRepositoryImpl(
       apiService: GetIt.I<ApiService>(instanceName: 'backendDio'),
       cacheManager: GetIt.I<CacheManager>(),
     ),
   );
-  GetIt.I.registerLazySingleton(() => GetOnline(GetIt.I<OnlineRepository>()));
+  GetIt.I.registerLazySingleton(() => GetServers(GetIt.I<ServerRepository>()));
   runApp(
     RepositoryProvider<SettingsRepositoryInterface>(
       create: (context) => SettingsRepository(),

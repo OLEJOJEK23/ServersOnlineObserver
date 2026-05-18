@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:servers_online_observer/widgets/players_bottom_sheet.dart';
 
 class ServerCard extends StatelessWidget {
   final Map<String, String> server;
@@ -38,7 +39,42 @@ class ServerCard extends StatelessWidget {
         elevation: 5,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () => print("Tap: ${server["name"]}"),
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => ServerPlayersBottomSheet(
+                serverName: "⚡ METACS.RU ⚡ #1 ДЕТИ МИРАЖА",
+                map: "de_mirage",
+                currentPlayers: "5",
+                maxPlayers: "32",
+                scoreT: "1",
+                scoreCT: "5",
+                players: [
+                  Player(
+                    name: "eger_mEst1r",
+                    rank: "Global Elite",
+                    kills: 12,
+                    deaths: 4,
+                    hs: 67,
+                    timeInGame: "00:07:08",
+                    ping: 45,
+                  ),
+                  Player(
+                    name: "lenroma5",
+                    rank: "Silver I",
+                    kills: 3,
+                    deaths: 8,
+                    hs: 33,
+                    timeInGame: "00:05:09",
+                    ping: 67,
+                  ),
+                  // Добавляй остальных игроков здесь
+                ],
+              ),
+            );
+          },
           hoverColor: const Color.fromRGBO(13, 148, 136, 0.08),
           splashColor: const Color.fromRGBO(13, 148, 136, 0.16),
           child: Padding(

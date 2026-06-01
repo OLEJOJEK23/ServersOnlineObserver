@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:servers_online_observer/api/domain/entities/server_details.dart';
 import 'package:servers_online_observer/api/domain/usecases/get_players.dart';
+import 'package:servers_online_observer/widgets/player_list_table.dart';
 
 import '../api/domain/entities/player.dart';
 
@@ -144,54 +145,9 @@ class _ServerPlayersBottomSheetState extends State<ServerPlayersBottomSheet> {
                     ),
                   ),
 
-                  // Players Table
+                  // Player List Table
                   Expanded(
-                    child: _players.isEmpty
-                        ? const Center(
-                            child: Text(
-                              "Сервер пуст",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          )
-                        : SingleChildScrollView( // Vertical scroll
-                            child: SingleChildScrollView( // Horizontal scroll
-                              scrollDirection: Axis.horizontal,
-                              child: DataTable(
-                                columnSpacing: 24.0,
-                                horizontalMargin: 12.0,
-                                columns: const [
-                                  DataColumn(label: Text('LVL')),
-                                  DataColumn(label: Text('Игрок')),
-                                  DataColumn(label: Text('Звание')),
-                                  DataColumn(label: Text('Киллы')),
-                                  DataColumn(label: Text('K/D')),
-                                  DataColumn(label: Text('HS%')),
-                                  DataColumn(label: Text('Время')),
-                                  DataColumn(label: Text('Пинг')),
-                                ],
-                                rows: _players.map((player) {
-                                  final isTerrorist = player.team == "Terrorist";
-                                  return DataRow(
-                                    color: MaterialStateProperty.all(
-                                      isTerrorist
-                                          ? Colors.orange.withAlpha(100)
-                                          : Colors.blue.withAlpha(100),
-                                    ),
-                                    cells: [
-                                      DataCell(Text(player.faceitLevel.toString())),
-                                      DataCell(Text(player.playerName)),
-                                      DataCell(Image.network(player.rankImageUrl, width: 60, height: 20, fit: BoxFit.contain)),
-                                      DataCell(Text(player.kills.toString())),
-                                      DataCell(Text(player.kdRatio.toString())),
-                                      DataCell(Text('${player.hsPercent}%')),
-                                      DataCell(Text(player.timeInGame)),
-                                      DataCell(Text(player.ping.toString())),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
+                    child: PlayerListTable(players: _players),
                   ),
 
                   // Bottom Buttons

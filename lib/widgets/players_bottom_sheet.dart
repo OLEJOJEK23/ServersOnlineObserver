@@ -93,7 +93,7 @@ class _ServerPlayersBottomSheetState extends State<ServerPlayersBottomSheet> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
-                                "Карта: ${_serverDetails.currentMap} • ${_serverDetails.playersOnline}",
+                                "Карта: ${_serverDetails.currentMap} • ${_serverDetails.playersOnline}/${_serverDetails.adminsOnline}",
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),

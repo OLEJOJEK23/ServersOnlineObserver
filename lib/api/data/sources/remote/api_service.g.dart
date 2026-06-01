@@ -34,7 +34,7 @@ class _ApiService implements ApiService {
     )
         .compose(
           _dio.options,
-          '/servers',
+          'servers',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -47,6 +47,40 @@ class _ApiService implements ApiService {
     late ServersResponse _value;
     try {
       _value = ServersResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ServerPlayersResponseDto> getPlayers(
+      {required String serverId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'server_id': serverId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ServerPlayersResponseDto>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          'servers/players',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ServerPlayersResponseDto _value;
+    try {
+      _value = ServerPlayersResponseDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

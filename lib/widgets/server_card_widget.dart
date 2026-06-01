@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:servers_online_observer/widgets/players_bottom_sheet.dart';
 
+import '../api/domain/entities/server.dart';
+
 class ServerCard extends StatelessWidget {
-  final Map<String, String> server;
+  final Server server;
   final ThemeData theme;
   final ColorScheme colorScheme;
 
@@ -15,7 +17,7 @@ class ServerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parts = server["online"]!.split('/');
+    final parts = server.serverCurrentOnline.split('/');
     final curr = int.tryParse(parts[0]) ?? 0;
     final maxx = int.tryParse(parts[1]) ?? 0;
     final active = curr > 0;
@@ -45,33 +47,7 @@ class ServerCard extends StatelessWidget {
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => ServerPlayersBottomSheet(
-                serverName: "⚡ METACS.RU ⚡ #1 ДЕТИ МИРАЖА",
-                map: "de_mirage",
-                currentPlayers: "5",
-                maxPlayers: "32",
-                scoreT: "1",
-                scoreCT: "5",
-                players: [
-                  Player(
-                    name: "eger_mEst1r",
-                    rank: "Global Elite",
-                    kills: 12,
-                    deaths: 4,
-                    hs: 67,
-                    timeInGame: "00:07:08",
-                    ping: 45,
-                  ),
-                  Player(
-                    name: "lenroma5",
-                    rank: "Silver I",
-                    kills: 3,
-                    deaths: 8,
-                    hs: 33,
-                    timeInGame: "00:05:09",
-                    ping: 67,
-                  ),
-                  // Добавляй остальных игроков здесь
-                ],
+                serverID: server.serverId,
               ),
             );
           },
@@ -102,7 +78,7 @@ class ServerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        server["name"]!,
+                        server.serverName,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           height: 1.2,
@@ -118,7 +94,7 @@ class ServerCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            server["map"]!,
+                            server.serverCurrentMap,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),

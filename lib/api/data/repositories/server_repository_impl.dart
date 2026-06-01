@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:servers_online_observer/api/core/error/failure.dart';
 import 'package:servers_online_observer/api/data/sources/remote/api_service.dart';
+import 'package:servers_online_observer/api/domain/entities/server_players_response.dart';
 import 'package:servers_online_observer/api/domain/repositories/server_repository.dart';
 
 import '../../domain/entities/server.dart';
@@ -33,6 +34,20 @@ class ServerRepositoryImpl implements ServerRepository {
       );
 
       return Right(servers);
+    } on DioException catch (e) {
+      return Left(ServerFailure("API error: ${e.message}"));
+    } catch (e) {
+      return Left(ServerFailure('Unexpected error: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ServerPlayersResponse>> getPlayers(
+      {required String serverId}) async {
+    try {
+      // Caching for players is not implemented in this example
+      final response = await apiService.getPlayers(serverId: serverId);
+      return Right(response.toDomain());
     } on DioException catch (e) {
       return Left(ServerFailure("API error: ${e.message}"));
     } catch (e) {

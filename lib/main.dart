@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:servers_online_observer/api/core/network/dio_client.dart';
 import 'package:servers_online_observer/api/data/repositories/server_repository_impl.dart';
 import 'package:servers_online_observer/api/domain/repositories/server_repository.dart';
+import 'package:servers_online_observer/api/domain/usecases/get_players.dart';
 import 'package:servers_online_observer/api/domain/usecases/get_servers.dart';
 import 'package:servers_online_observer/repositories/settings_repository/settings_repository.dart';
 import 'package:servers_online_observer/servers_online_observer_app.dart';
@@ -57,6 +58,7 @@ void main() async {
     ),
   );
   GetIt.I.registerLazySingleton(() => GetServers(GetIt.I<ServerRepository>()));
+  GetIt.I.registerLazySingleton(() => GetPlayers(GetIt.I<ServerRepository>()));
   runApp(
     RepositoryProvider<SettingsRepositoryInterface>(
       create: (context) => SettingsRepository(),

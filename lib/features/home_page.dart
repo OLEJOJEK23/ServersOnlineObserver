@@ -221,11 +221,7 @@ class _TrayHomePageState extends State<TrayHomePage>
                         itemBuilder: (context, index) {
                           final server = _servers[index];
                           return ServerCard(
-                            server: {
-                              "name": server.serverName,
-                              "map": server.serverCurrentMap,
-                              "online": server.serverCurrentOnline,
-                            },
+                            server: server,
                             theme: theme,
                             colorScheme: colorScheme,
                           );

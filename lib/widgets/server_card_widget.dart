@@ -54,7 +54,7 @@ class ServerCard extends StatelessWidget {
           hoverColor: const Color.fromRGBO(13, 148, 136, 0.08),
           splashColor: const Color.fromRGBO(13, 148, 136, 0.16),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 Container(
@@ -72,10 +72,11 @@ class ServerCard extends StatelessWidget {
                     size: 28,
                   ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         server.serverName,
@@ -83,16 +84,20 @@ class ServerCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           height: 1.2,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 6),
-                      Row(
+                      Wrap(
+                        spacing: 8.0,
+                        runSpacing: 4.0,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Icon(
                             Icons.map_outlined,
                             size: 16,
                             color: colorScheme.onSurfaceVariant,
                           ),
-                          const SizedBox(width: 6),
                           Text(
                             server.serverCurrentMap,
                             style: theme.textTheme.bodyMedium?.copyWith(
@@ -104,8 +109,10 @@ class ServerCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "$curr / $maxx",
@@ -123,21 +130,6 @@ class ServerCard extends StatelessWidget {
                         color: colorScheme.onSurfaceVariant.withAlpha(191),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () => print("copy"),
-                      icon: const Icon(Icons.copy),
-                    ),
-                    IconButton(
-                      onPressed: () => print("connect"),
-                      icon: const Icon(Icons.play_arrow),
-                    )
                   ],
                 ),
               ],

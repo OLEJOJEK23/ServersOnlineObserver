@@ -46,7 +46,6 @@ class _TrayHomePageState extends State<TrayHomePage>
       trayManager.addListener(this);
       windowManager.addListener(this);
       _initTray();
-      //windowManager.setPreventClose(true);
     }
     _fetchServers();
     _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
@@ -57,8 +56,10 @@ class _TrayHomePageState extends State<TrayHomePage>
 
   @override
   void dispose() {
-    trayManager.removeListener(this);
-    windowManager.removeListener(this);
+    if (Platform.isWindows) {
+      trayManager.removeListener(this);
+      windowManager.removeListener(this);
+    }
     _timer?.cancel();
     super.dispose();
   }
@@ -124,112 +125,157 @@ class _TrayHomePageState extends State<TrayHomePage>
     windowManager.hide();
   }
 
-  void settings() {
-    print("settings");
-  }
-
-  void refresh() {
-    _fetchServers();
-  }
-
-  void add() {
-    print("add");
-  }
-
-  void change_theme() {
-    print("change_theme");
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Servers Online Observer"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_rounded),
-            tooltip: "Добавить проект",
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true, // важно для клавиатуры
-                backgroundColor: Colors.transparent,
-                builder: (context) => NewServerBottomSheet(
-                  onAdd: (name, url) {},
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: "Обновить данные",
-            onPressed: refresh,
-          ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 400),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(scale: animation, child: child);
-            },
-            child: IconButton(
-              key: ValueKey<bool>(context.watch<ThemeCubit>().state.isDark),
-              icon: Icon(
-                context.watch<ThemeCubit>().state.isDark
-                    ? Icons.light_mode_rounded
-                    : Icons.dark_mode_rounded,
-                size: 24,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double mobileBreakpoint = 600;
+        final bool isMobile = constraints.maxWidth < mobileBreakpoint;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Servers Online Observer"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add_rounded),
+                tooltip: "Добавить проект",
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => NewServerBottomSheet(
+                      onAdd: (name, url) {},
+                    ),
+                  );
+                },
               ),
-              tooltip: context.watch<ThemeCubit>().state.isDark
-                  ? 'Переключить на светлую тему'
-                  : 'Переключить на тёмную тему',
-              onPressed: () {
-                context.read<ThemeCubit>().toggleTheme();
-              },
-            ),
+              IconButton(
+                icon: const Icon(Icons.refresh_rounded),
+                tooltip: "Обновить данные",
+                onPressed: _fetchServers,
+              ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                child: IconButton(
+                  key: ValueKey<bool>(context.watch<ThemeCubit>().state.isDark),
+                  icon: Icon(
+                    context.watch<ThemeCubit>().state.isDark
+                        ? Icons.light_mode_rounded
+                        : Icons.dark_mode_rounded,
+                    size: 24,
+                  ),
+                  tooltip: context.watch<ThemeCubit>().state.isDark
+                      ? 'Переключить на светлую тему'
+                      : 'Переключить на тёмную тему',
+                  onPressed: () {
+                    context.read<ThemeCubit>().toggleTheme();
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
           ),
-          const SizedBox(width: 10),
-        ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
-          child: Divider(
-            thickness: 2,
-          ),
-        ),
-      ),
-      body: Row(
-        children: [
-          NavigationRailProjects(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (index) {
-                setState(() => _selectedIndex = index);
-              },
-              projects: _projects),
-          VerticalDivider(
-            width: 2,
-            thickness: 2,
-            color: colorScheme.outlineVariant,
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _error != null
-                    ? Center(child: Text('Error: $_error'))
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        itemCount: _servers.length,
-                        itemBuilder: (context, index) {
-                          final server = _servers[index];
-                          return ServerCard(
-                            server: server,
-                            theme: theme,
-                            colorScheme: colorScheme,
-                          );
-                        },
-                      ),
-          ),
-        ],
-      ),
+          body: isMobile
+              ? _buildMobileLayout(context)
+              : _buildDesktopLayout(context),
+          bottomNavigationBar: isMobile
+              ? BottomNavigationBar(
+                  currentIndex: _selectedIndex,
+                  onTap: (index) {
+                    setState(() => _selectedIndex = index);
+                  },
+                  selectedItemColor: colorScheme.primary,
+                  unselectedItemColor: colorScheme.onSurfaceVariant,
+                  items: _projects
+                      .map((p) => BottomNavigationBarItem(
+                            icon: const Icon(Icons.storage_rounded),
+                            label: p,
+                          ))
+                      .toList(),
+                )
+              : null,
+        );
+      },
     );
+  }
+
+  Widget _buildServerList(BuildContext context, bool isMobile) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_error != null) {
+      return Center(child: Text('Error: $_error'));
+    }
+
+    if (isMobile) {
+      // Для мобильных - вертикальный список
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: _servers.length,
+        itemBuilder: (context, index) {
+          final server = _servers[index];
+          return ServerCard(
+            server: server,
+            theme: theme,
+            colorScheme: colorScheme,
+          );
+        },
+      );
+    } else {
+      // Для десктопа - сетка
+      return GridView.builder(
+        padding: const EdgeInsets.all(24),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 400, // Максимальная ширина карточки
+          childAspectRatio: 3 / 1.2, // Соотношение сторон
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+        itemCount: _servers.length,
+        itemBuilder: (context, index) {
+          final server = _servers[index];
+          return ServerCard(
+            server: server,
+            theme: theme,
+            colorScheme: colorScheme,
+          );
+        },
+      );
+    }
+  }
+
+  Widget _buildDesktopLayout(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        NavigationRailProjects(
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: (index) {
+              setState(() => _selectedIndex = index);
+            },
+            projects: _projects),
+        VerticalDivider(
+          width: 2,
+          thickness: 2,
+          color: colorScheme.outlineVariant,
+        ),
+        Expanded(
+          child: _buildServerList(context, false),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
+    return _buildServerList(context, true);
   }
 }
